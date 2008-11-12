@@ -1,0 +1,39 @@
+auth_callback:sqlite3.types.auth_callback_t
+auxdata_callback:sqlite3.types.auxdata_callback_t
+busy_callback:sqlite3.types.busy_callback_t
+change_callback:sqlite3.types.change_callback_t
+char***:sqlite3.types.char_3star_t
+char**:sqlite3.types.char_2star_t
+char*:cs.chars_ptr
+char16***:sqlite3.types.char_3star_t
+char16**:sqlite3.types.char_2star_t
+char16*:cs.chars_ptr
+collation_callback16:sqlite3.types.collation16_callback_t
+collation_callback:sqlite3.types.collation_callback_t
+commit_callback:sqlite3.types.commit_callback_t
+compare_callback:sqlite3.types.compare_callback_t
+create_final_callback:sqlite3.types.create_final_callback_t
+create_func_callback:sqlite3.types.create_func_callback_t
+create_step_callback:sqlite3.types.create_step_callback_t
+destructor_callback:sqlite3.types.destructor_callback_t
+double:sqlite3.types.double_t
+exec_callback:sqlite3.types.exec_callback_t
+int64:sqlite3.types.int64_t
+int:sqlite3.types.int_t
+int*:sqlite3.types.int_access_t
+mutex_type:sqlite3.types.mutex_type_t
+progress_callback:sqlite3.types.progress_callback_t
+result_callback:sqlite3.types.result_callback_t
+rollback_callback:sqlite3.types.rollback_callback_t
+sqlite3*:sqlite3.types.database_t
+sqlite3**:access sqlite3.types.database_t
+sqlite3_blob**:access sqlite3.types.blob_t
+sqlite3_blob*:sqlite3.types.blob_t
+sqlite3_context*:sqlite3.types.context_t
+sqlite3_mutex*:sqlite3.types.mutex_t
+sqlite3_stmt**:access sqlite3.types.statement_t
+sqlite3_stmt*:sqlite3.types.statement_t
+sqlite3_vfs*:sqlite3.types.vfs_t
+text_encoding:sqlite3.types.text_encoding_t
+value*:sqlite3.types.value_t
+void*:sqlite3.types.void_ptr_t

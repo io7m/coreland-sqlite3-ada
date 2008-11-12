@@ -1,0 +1,36 @@
+auth_callback:int (*)(void *, int, const char *, const char *, const char *, const char *)
+auxdata_callback:void (*)(void *)
+busy_callback:int (*)(void *, int)
+change_callback:void (*)(void *, int, char const *, char const *, sqlite3_int64)
+char***:char ***
+char**:char **
+char*:char *
+char16***:void ***
+char16**:void **
+char16:void *
+collation_callback16:void (*) (void *, sqlite3 *, int, const void *)
+collation_callback:void (*) (void *, sqlite3 *, int, const char *)
+commit_callback:int (*)(void *)
+compare_callback:int (*) (void *, int, const void *, int, const void *)
+create_final_callback:void (*)(sqlite3_context *)
+create_func_callback:void (*)(sqlite3_context *, int, sqlite3_value **)
+create_step_callback:void (*)(sqlite3_context *, int, sqlite3_value **)
+destructor_callback:void (*)(void *)
+double:double
+exec_callback:int (*)(void *, int, char**,char **)
+int64:sqlite_int64
+int:int
+mutex_type:int
+progress_callback:int (*)(void *)
+result_callback:void (*)(void *)
+rollback_callback:void (*)(void *)
+sqlite3_blob**:sqlite3_blob **
+sqlite3_blob*:sqlite3_blob *
+sqlite3_context*:sqlite3_context *
+sqlite3_mutex*:sqlite3_mutex *
+sqlite3_stmt**:sqlite3_stmt **
+sqlite3_stmt*:sqlite3_stmt *
+sqlite3_vfs*:sqlite3_vfs *
+text_encoding:int
+value*:sqlite3_value *
+void*:void *

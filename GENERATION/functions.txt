@@ -1,0 +1,145 @@
+void*:aggregate_context:sqlite3_context* context:int num_bytes:
+int:auto_extension:void* entry_point:
+int:bind_blob:sqlite3_stmt* stmt:int index:void* blob:int num_bytes:destructor_callback destructor:
+int:bind_double:sqlite3_stmt* stmt:int index:double value:
+int:bind_int:sqlite3_stmt* stmt:int index:int value:
+int:bind_int64:sqlite3_stmt* stmt:int index:int64 value:
+int:bind_null:sqlite3_stmt* stmt:int index:
+int:bind_parameter_count:sqlite3_stmt* stmt:int num
+int:bind_parameter_index:sqlite3_stmt* stmt:
+char*:bind_parameter_name:sqlite3_stmt* stmt:char* name:
+int:bind_text:sqlite3_stmt* stmt:int index:char* blob:int num_bytes:destructor_callback destructor:
+int:bind_text16:sqlite3_stmt* stmt:int index:char16* text:int num_bytes:destructor_callback destructor:
+int:bind_value:sqlite3_stmt* stmt:int index:value* value:
+int:bind_zeroblob:sqlite3_stmt* stmt:int index:int num_bytes:
+int:blob_bytes:sqlite3_blob* blob:
+int:blob_close:sqlite3_blob* blob:
+int:blob_open:sqlite3* sql:char* db:char* table:char* column:int64 row:int flags:sqlite3_blob** blob:
+int:blob_read:sqlite3_blob* blob:void* buffer:int num_bytes:int offset:
+int:blob_write:sqlite3_blob* blob:void* buffer:int num_bytes:int offset:
+int:busy_handler:sqlite3* sql:busy_callback callback:void* context:
+int:busy_timeout:sqlite3* sql:int ms:
+int:changes:sqlite3* sql:
+int:clear_bindings:sqlite3_stmt* stmt:
+int:close:sqlite3* sql:
+int:collation_needed:sqlite3* db:void* context:collation_callback callback:
+int:collation_needed16:sqlite3* db:char16* context:collation_callback16 callback:
+void*:column_blob:sqlite3_stmt* stmt:int column:
+int:column_bytes:sqlite3_stmt* stmt:int column:
+int:column_bytes16:sqlite3_stmt* stmt:int column:
+int:column_count:sqlite3_stmt* stmt:
+char*:column_database_name:sqlite3_stmt* stmt:int column:
+char16*:column_database_name16:sqlite3_stmt* stmt:int column:
+char*:column_decltype:sqlite3_stmt* stmt:int column:
+char16*:column_decltype16:sqlite3_stmt* stmt:int column:
+double:column_double:sqlite3_stmt* stmt:int column:
+int:column_int:sqlite3_stmt* stmt:int column:
+int64:column_int64:sqlite3_stmt* stmt:int column:
+char*:column_name:sqlite3_stmt* stmt:int column:
+char16*:column_name16:sqlite3_stmt* stmt:int column:
+char*:column_origin_name:sqlite3_stmt* stmt:int column:
+char16*:column_origin_name16:sqlite3_stmt* stmt:int column:
+char*:column_table_name:sqlite3_stmt* stmt:int column:
+char16*:column_table_name16:sqlite3_stmt* stmt:int column:
+char*:column_text:sqlite3_stmt* stmt:int column:
+char16*:column_text16:sqlite3_stmt* stmt:int column:
+int:column_type:sqlite3_stmt* stmt:int column:
+value*:column_value:sqlite3_stmt* stmt:int column:
+void*:commit_hook:sqlite3* sql:commit_callback callback:void* context:
+int:complete:sqlite3* sql:
+int:complete16:sqlite3* sql:
+sqlite3*:context_db_handle:sqlite3_context* context:
+int:create_collation:sqlite3* sql:char* name:text_encoding encoding:void* context:compare_callback callback:
+int:create_collation16:sqlite3* sql:char* name:text_encoding encoding:void* context:compare_callback callback:
+int:create_function:sqlite3* sql:char* name:int num_arguments:text_encoding encoding:void* user_data:create_func_callback func:create_step_callback step:create_final_callback final:
+int:create_function16:sqlite3* sql:char16* name:int num_arguments:text_encoding encoding:void* user_data:create_func_callback func:create_step_callback step:create_final_callback final:
+int:data_count:sqlite3_stmt* stmt:
+sqlite3*:db_handle:sqlite3_stmt* stmt:
+int:enable_load_extension:sqlite3* db:int onoff:
+int:enable_shared_cache:int onoff:
+int:errcode:sqlite3* db:
+char*:errmsg:sqlite3* db:
+char16*:errmsg16:sqlite3* db:
+sqlite3*:exec:char* sql:exec_callback callback:void* context:char** error_message:
+int:extended_result_codes:sqlite3* db:int onoff:
+int:file_control:sqlite3* db:char* db_name:int op:void* context:
+int:finalize:sqlite3_stmt* stmt:
+void:free:void* address:
+void:free_table:char** table:
+int:get_autocommit:sqlite3* db:
+void*:get_auxdata:sqlite3_context* context:int n:
+int:get_table:sqlite3* db:char* sql:char*** result:int* row:int* column:char** error_message:
+int:initialize:
+void:interrupt:sqlite3* db:
+int64:last_insert_rowid:sqlite3* db:
+char*:libversion:
+int:libversion_number:
+int:limit:sqlite3* db:int id:int new_value:
+int:load_extension:sqlite3* db:char* file:char* entry:char** error_message:
+void*:malloc:int bytes
+int64:memory_highwater:int reset_flag:
+int64:memory_used:
+sqlite3_mutex*:mutex_alloc:mutex_type mutex_type
+void:mutex_enter:sqlite3_mutex* mutex
+void:mutex_free:sqlite3_mutex* mutex
+int:mutex_held:sqlite3_mutex* mutex
+void:mutex_leave:sqlite3_mutex* mutex
+int:mutex_notheld:sqlite3_mutex* mutex
+int:mutex_try:sqlite3_mutex* mutex
+sqlite3_stmt*:next_stmt:sqlite3* db:sqlite3_stmt* stmt:
+int:open:char* file:sqlite3** db:
+int:open16:char16* file:sqlite3** db:
+int:os_end:
+int:os_init:
+int:prepare:sqlite3* db:char* sql:int sql_length:sqlite3_stmt** stmt:char** tail:
+int:prepare16:sqlite3* db:char16* sql:int sql_length:sqlite3_stmt** stmt:char16** tail:
+void:progress_handler:sqlite3* db:int opcodes:progress_callback callback:void* context:
+void:randomness:int bytes:void* address:
+void*:realloc:void* address:int size:
+int:release_memory:int flag:
+int:reset:sqlite3_stmt* stmt:
+void:reset_auto_extension
+void:result_blob:sqlite3_context* context:void* blob:int num_bytes:result_callback callback:
+void:result_double:sqlite3_context* context:double value:
+void:result_error:sqlite3_context* context:char* value:int num_bytes:
+void:result_error16:sqlite3_context* context:char16* value:int num_bytes:
+void:result_error_code:sqlite3_context* context:int error_code:
+void:result_error_nomem:sqlite3_context* context:
+void:result_error_toobig:sqlite3_context* context:
+void:result_int:sqlite3_context* context:int value:
+void:result_int64:sqlite3_context* context:int64 value:
+void:result_null:sqlite3_context* context:
+void:result_text:sqlite3_context* context:char* text:int num_bytes:result_callback callback:
+void:result_text16:sqlite3_context* context:char16* text:int num_bytes:result_callback callback:
+void:result_text16be:sqlite3_context* context:char16* text:int num_bytes:result_callback callback:
+void:result_text16le:sqlite3_context* context:char16* text:int num_bytes:result_callback callback:
+void:result_value:sqlite3_context* context:value* value:
+void:result_zeroblob:sqlite3_context* context:int num_bytes:
+void*:rollback_hook:sqlite3* sql:rollback_callback callback:void* context:
+int:set_authorizer:sqlite3* db:auth_callback callback:void* context:
+void*:set_auxdata:sqlite3_context* context:int index:void* data:auxdata_callback callback:
+int:shutdown
+int:sleep:int time
+void:soft_heap_limit:int limit
+char*:sql:sqlite3_stmt* stmt:
+int:step:sqlite3_stmt* stmt:
+int:table_column_metadata:sqlite3* db:char* db_name:char* table_name:char* column_name:char** data_type:char** collation_seq:int* not_null:int* primary_key:int* auto_increment:
+int:threadsafe
+int:total_changes:sqlite3* db
+void*:update_hook:sqlite3* db:change_callback callback:void* context:
+void*:user_data:sqlite3_context* context:
+void*:value_blob:value* value:
+int:value_bytes:value* value:
+int:value_bytes16:value* value:
+double:value_double:value* value:
+int:value_int:value* value:
+int64:value_int64:value* value:
+int:value_numeric_type:value* value:
+char*:value_text:value* value:
+char16*:value_text16:value* value:
+char16*:value_text16be:value* value:
+char16*:value_text16le:value* value:
+int:value_type:value* value:
+sqlite3_vfs*:vfs_find:char* name:
+int:vfs_register:sqlite3_vfs* vfs:int make_default:
+int:vfs_unregister:sqlite3_vfs* vfs:
