@@ -7,9 +7,9 @@ ctxt/bindir.o ctxt/ctxt.a ctxt/dlibdir.o ctxt/incdir.o ctxt/repos.o \
 ctxt/slibdir.o ctxt/version.o deinstaller deinstaller.o inst-check inst-check.o \
 inst-copy inst-copy.o inst-dir inst-dir.o inst-link inst-link.o install_core.o \
 install_error.o installer installer.o instchk instchk.o insthier.o \
-sqlite3-ada-conf sqlite3-ada-conf.o sqlite3-ada.a sqlite3-constants.ali \
-sqlite3-constants.o sqlite3-thin.ali sqlite3-thin.o sqlite3-types.ali \
-sqlite3-types.o sqlite3.ali sqlite3.o
+sqlite3-ada-conf sqlite3-ada-conf.o sqlite3-ada.a sqlite3-api.ali sqlite3-api.o \
+sqlite3-constants.ali sqlite3-constants.o sqlite3-thin.ali sqlite3-thin.o \
+sqlite3-types.ali sqlite3-types.o sqlite3.ali sqlite3.o
 
 # Mkf-deinstall
 deinstall: deinstaller inst-check inst-copy inst-dir inst-link
@@ -256,10 +256,21 @@ cc-compile sqlite3-ada-conf.c ctxt.h _sysinfo.h
 	./cc-compile sqlite3-ada-conf.c
 
 sqlite3-ada.a:\
-cc-slib sqlite3-ada.sld sqlite3-constants.o sqlite3-thin.o sqlite3-types.o \
-sqlite3.o
-	./cc-slib sqlite3-ada sqlite3-constants.o sqlite3-thin.o sqlite3-types.o \
-	sqlite3.o
+cc-slib sqlite3-ada.sld sqlite3-api.o sqlite3-constants.o sqlite3-thin.o \
+sqlite3-types.o sqlite3.o
+	./cc-slib sqlite3-ada sqlite3-api.o sqlite3-constants.o sqlite3-thin.o \
+	sqlite3-types.o sqlite3.o
+
+sqlite3-api.ads:\
+sqlite3-types.ads
+
+sqlite3-api.ali:\
+ada-compile sqlite3-api.adb sqlite3-api.ads sqlite3-constants.ads \
+sqlite3-thin.ads
+	./ada-compile sqlite3-api.adb
+
+sqlite3-api.o:\
+sqlite3-api.ali
 
 sqlite3-constants.ali:\
 ada-compile sqlite3-constants.ads sqlite3-constants.ads
@@ -298,8 +309,9 @@ obj_clean:
 	inst-check inst-check.o inst-copy inst-copy.o inst-dir inst-dir.o inst-link \
 	inst-link.o install_core.o install_error.o installer installer.o instchk \
 	instchk.o insthier.o sqlite3-ada-conf sqlite3-ada-conf.o sqlite3-ada.a \
-	sqlite3-constants.ali sqlite3-constants.o sqlite3-thin.ali sqlite3-thin.o \
-	sqlite3-types.ali sqlite3-types.o sqlite3.ali sqlite3.o
+	sqlite3-api.ali sqlite3-api.o sqlite3-constants.ali sqlite3-constants.o \
+	sqlite3-thin.ali sqlite3-thin.o sqlite3-types.ali sqlite3-types.o sqlite3.ali \
+	sqlite3.o
 ext_clean:
 	rm -f conf-adatype conf-cctype conf-ldtype conf-sosuffix conf-systype mk-ctxt
 

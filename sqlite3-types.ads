@@ -58,7 +58,8 @@ package sqlite3.types is
   pragma convention (c, uint64_access_t);
 
   -- Pointer types
-  type void_ptr_t is new system.address;
+  subtype void_ptr_t is system.address;
+  null_ptr : constant void_ptr_t := system.null_address;
 
   -- DB types
   type database_t is access all system.address;
@@ -82,10 +83,10 @@ package sqlite3.types is
   type vfs_t is access all system.address;
   pragma convention (c, vfs_t);
 
-  type char_2star_t is access all system.address;
+  type char_2star_t is access all cs.chars_ptr;
   pragma convention (c, char_2star_t);
 
-  type char_3star_t is access all system.address;
+  type char_3star_t is access all char_2star_t;
   pragma convention (c, char_3star_t);
 
   type text_encoding_t is (UTF8, UTF16LE, UTF16BE, UTF16, ANY, UTF16_ALIGNED);

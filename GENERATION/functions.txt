@@ -60,7 +60,7 @@ int:enable_shared_cache:int onoff:
 int:errcode:sqlite3* db:
 char*:errmsg:sqlite3* db:
 char16*:errmsg16:sqlite3* db:
-sqlite3*:exec:char* sql:exec_callback callback:void* context:char** error_message:
+int:exec:sqlite3* db:char* sql:exec_callback callback:void* context:char** error_message:
 int:extended_result_codes:sqlite3* db:int onoff:
 int:file_control:sqlite3* db:char* db_name:int op:void* context:
 int:finalize:sqlite3_stmt* stmt:

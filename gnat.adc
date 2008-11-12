@@ -1,4 +1,8 @@
 
+-- ./sqlite3-api.apk
+pragma source_file_name(sqlite3.api, spec_file_name => "sqlite3-api.ads");
+pragma source_file_name(sqlite3.api, body_file_name => "sqlite3-api.adb");
+
 -- ./sqlite3-constants.apk
 pragma source_file_name(sqlite3.constants, spec_file_name => "sqlite3-constants.ads");
 

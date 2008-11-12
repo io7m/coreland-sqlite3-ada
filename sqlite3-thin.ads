@@ -343,10 +343,11 @@ package sqlite3.thin is
   pragma import (c, errmsg16, "sqlite3_errmsg16");
 
   function exec
-    (sql           : cs.chars_ptr;
+    (db            : sqlite3.types.database_t;
+     sql           : cs.chars_ptr;
      callback      : sqlite3.types.exec_callback_t;
      context       : sqlite3.types.void_ptr_t;
-     error_message : sqlite3.types.char_2star_t) return sqlite3.types.database_t;
+     error_message : sqlite3.types.char_2star_t) return sqlite3.types.int_t;
   pragma import (c, exec, "sqlite3_exec");
 
   function extended_result_codes
@@ -481,13 +482,17 @@ package sqlite3.thin is
   function os_init return sqlite3.types.int_t;
   pragma import (c, os_init, "sqlite3_os_init");
 
+  -- "Note that the use of sqlite3_prepare() is not recommended for new
+  -- applications. The alternative routine sqlite3_prepare_v2() should be
+  -- used instead."
+
   function prepare
     (db         : sqlite3.types.database_t;
      sql        : cs.chars_ptr;
      sql_length : sqlite3.types.int_t;
      stmt       : access sqlite3.types.statement_t;
      tail       : sqlite3.types.char_2star_t) return sqlite3.types.int_t;
-  pragma import (c, prepare, "sqlite3_prepare");
+  pragma import (c, prepare, "sqlite3_prepare_v2");
 
   function prepare16
     (db         : sqlite3.types.database_t;
@@ -495,7 +500,7 @@ package sqlite3.thin is
      sql_length : sqlite3.types.int_t;
      stmt       : access sqlite3.types.statement_t;
      tail       : sqlite3.types.char_2star_t) return sqlite3.types.int_t;
-  pragma import (c, prepare16, "sqlite3_prepare16");
+  pragma import (c, prepare16, "sqlite3_prepare16_v2");
 
   procedure progress_handler
     (db       : sqlite3.types.database_t;
