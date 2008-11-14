@@ -1,6 +1,10 @@
 with ada.strings.unbounded;
 with sqlite3.types;
 
+generic
+  type user_data_type is private;
+  type user_data_access_type is access all user_data_type;
+
 package sqlite3.api is
   package us renames ada.strings.unbounded;
 
@@ -74,6 +78,14 @@ package sqlite3.api is
   for error_t'size use sqlite3.types.int_t'size;
   pragma convention (c, error_t);
 
+  type column_names_t is array (natural range <>) of us.unbounded_string;
+  type column_values_t is array (natural range <>) of us.unbounded_string;
+
+  type exec_callback_t is access procedure
+    (column_names  : column_names_t;
+     column_values : column_values_t;
+     user_data     : user_data_access_type);
+
   procedure open
     (filename : string;
      database : out sqlite3.types.database_t);
@@ -83,7 +95,9 @@ package sqlite3.api is
     (database      : sqlite3.types.database_t;
      sql           : string;
      error         : out boolean;
-     error_message : out us.unbounded_string);
+     error_message : out us.unbounded_string;
+     callback      : exec_callback_t          := null;
+     user_data     : user_data_access_type    := null);
   pragma inline (exec);
 
   procedure close

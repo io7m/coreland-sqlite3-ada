@@ -83,10 +83,8 @@ package sqlite3.types is
   type vfs_t is access all system.address;
   pragma convention (c, vfs_t);
 
-  type char_2star_t is access all cs.chars_ptr;
-  pragma convention (c, char_2star_t);
-
-  type char_3star_t is access all char_2star_t;
+  subtype char_2star_t is system.address;
+     type char_3star_t is access all char_2star_t;
   pragma convention (c, char_3star_t);
 
   type text_encoding_t is (UTF8, UTF16LE, UTF16BE, UTF16, ANY, UTF16_ALIGNED);

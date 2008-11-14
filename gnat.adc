@@ -1,4 +1,8 @@
 
+-- ./cstringa.apk
+pragma source_file_name(cstringa, spec_file_name => "cstringa.ads");
+pragma source_file_name(cstringa, body_file_name => "cstringa.adb");
+
 -- ./sqlite3-api.apk
 pragma source_file_name(sqlite3.api, spec_file_name => "sqlite3-api.ads");
 pragma source_file_name(sqlite3.api, body_file_name => "sqlite3-api.adb");

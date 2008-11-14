@@ -3,13 +3,13 @@
 default: all
 
 all:\
-ctxt/bindir.o ctxt/ctxt.a ctxt/dlibdir.o ctxt/incdir.o ctxt/repos.o \
-ctxt/slibdir.o ctxt/version.o deinstaller deinstaller.o inst-check inst-check.o \
-inst-copy inst-copy.o inst-dir inst-dir.o inst-link inst-link.o install_core.o \
-install_error.o installer installer.o instchk instchk.o insthier.o \
-sqlite3-ada-conf sqlite3-ada-conf.o sqlite3-ada.a sqlite3-api.ali sqlite3-api.o \
-sqlite3-constants.ali sqlite3-constants.o sqlite3-thin.ali sqlite3-thin.o \
-sqlite3-types.ali sqlite3-types.o sqlite3.ali sqlite3.o
+cstringa.ali cstringa.o ctxt/bindir.o ctxt/ctxt.a ctxt/dlibdir.o ctxt/incdir.o \
+ctxt/repos.o ctxt/slibdir.o ctxt/version.o deinstaller deinstaller.o inst-check \
+inst-check.o inst-copy inst-copy.o inst-dir inst-dir.o inst-link inst-link.o \
+install_core.o install_error.o installer installer.o instchk instchk.o \
+insthier.o sqlite3-ada-conf sqlite3-ada-conf.o sqlite3-ada.a sqlite3-api.ali \
+sqlite3-api.o sqlite3-constants.ali sqlite3-constants.o sqlite3-thin.ali \
+sqlite3-thin.o sqlite3-types.ali sqlite3-types.o sqlite3.ali sqlite3.o
 
 # Mkf-deinstall
 deinstall: deinstaller inst-check inst-copy inst-dir inst-link
@@ -90,6 +90,13 @@ mk-sosuffix
 conf-systype:\
 mk-systype
 	./mk-systype > conf-systype.tmp && mv conf-systype.tmp conf-systype
+
+cstringa.ali:\
+ada-compile cstringa.adb cstringa.ads
+	./ada-compile cstringa.adb
+
+cstringa.o:\
+cstringa.ali
 
 # ctxt/bindir.c.mff
 ctxt/bindir.c: mk-ctxt conf-bindir
@@ -257,15 +264,15 @@ cc-compile sqlite3-ada-conf.c ctxt.h _sysinfo.h
 
 sqlite3-ada.a:\
 cc-slib sqlite3-ada.sld sqlite3-api.o sqlite3-constants.o sqlite3-thin.o \
-sqlite3-types.o sqlite3.o
+sqlite3-types.o sqlite3.o cstringa.o
 	./cc-slib sqlite3-ada sqlite3-api.o sqlite3-constants.o sqlite3-thin.o \
-	sqlite3-types.o sqlite3.o
+	sqlite3-types.o sqlite3.o cstringa.o
 
 sqlite3-api.ads:\
 sqlite3-types.ads
 
 sqlite3-api.ali:\
-ada-compile sqlite3-api.adb sqlite3-api.ads sqlite3-constants.ads \
+ada-compile sqlite3-api.adb sqlite3-api.ads cstringa.ads sqlite3-constants.ads \
 sqlite3-thin.ads
 	./ada-compile sqlite3-api.adb
 
@@ -303,15 +310,15 @@ sqlite3.ali
 clean-all: sysdeps_clean obj_clean ext_clean
 clean: obj_clean
 obj_clean:
-	rm -f ctxt/bindir.c ctxt/bindir.o ctxt/ctxt.a ctxt/dlibdir.c ctxt/dlibdir.o \
-	ctxt/incdir.c ctxt/incdir.o ctxt/repos.c ctxt/repos.o ctxt/slibdir.c \
-	ctxt/slibdir.o ctxt/version.c ctxt/version.o deinstaller deinstaller.o \
-	inst-check inst-check.o inst-copy inst-copy.o inst-dir inst-dir.o inst-link \
-	inst-link.o install_core.o install_error.o installer installer.o instchk \
-	instchk.o insthier.o sqlite3-ada-conf sqlite3-ada-conf.o sqlite3-ada.a \
-	sqlite3-api.ali sqlite3-api.o sqlite3-constants.ali sqlite3-constants.o \
-	sqlite3-thin.ali sqlite3-thin.o sqlite3-types.ali sqlite3-types.o sqlite3.ali \
-	sqlite3.o
+	rm -f cstringa.ali cstringa.o ctxt/bindir.c ctxt/bindir.o ctxt/ctxt.a \
+	ctxt/dlibdir.c ctxt/dlibdir.o ctxt/incdir.c ctxt/incdir.o ctxt/repos.c \
+	ctxt/repos.o ctxt/slibdir.c ctxt/slibdir.o ctxt/version.c ctxt/version.o \
+	deinstaller deinstaller.o inst-check inst-check.o inst-copy inst-copy.o \
+	inst-dir inst-dir.o inst-link inst-link.o install_core.o install_error.o \
+	installer installer.o instchk instchk.o insthier.o sqlite3-ada-conf \
+	sqlite3-ada-conf.o sqlite3-ada.a sqlite3-api.ali sqlite3-api.o \
+	sqlite3-constants.ali sqlite3-constants.o sqlite3-thin.ali sqlite3-thin.o \
+	sqlite3-types.ali sqlite3-types.o sqlite3.ali sqlite3.o
 ext_clean:
 	rm -f conf-adatype conf-cctype conf-ldtype conf-sosuffix conf-systype mk-ctxt
 
