@@ -1,0 +1,9 @@
+interp.ali
+getline.ali
+rowdump.ali
+../cstringa.ali
+../sqlite3-api.ali
+../sqlite3-constants.ali
+../sqlite3-thin.ali
+../sqlite3-types.ali
+../sqlite3.ali

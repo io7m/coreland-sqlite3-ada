@@ -18,3 +18,7 @@ pragma source_file_name(sqlite3.types, spec_file_name => "sqlite3-types.ads");
 
 -- ./sqlite3.apk
 pragma source_file_name(sqlite3, spec_file_name => "sqlite3.ads");
+
+-- UNIT_TESTS/rowdump.apk
+pragma source_file_name(rowdump, spec_file_name => "rowdump.ads");
+pragma source_file_name(rowdump, body_file_name => "rowdump.adb");

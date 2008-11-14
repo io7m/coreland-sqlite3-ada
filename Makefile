@@ -3,6 +3,9 @@
 default: all
 
 all:\
+UNIT_TESTS/getline.ali UNIT_TESTS/getline.o UNIT_TESTS/interp \
+UNIT_TESTS/interp.ali UNIT_TESTS/interp.o UNIT_TESTS/rowdump.ali \
+UNIT_TESTS/rowdump.o UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o \
 cstringa.ali cstringa.o ctxt/bindir.o ctxt/ctxt.a ctxt/dlibdir.o ctxt/incdir.o \
 ctxt/repos.o ctxt/slibdir.o ctxt/version.o deinstaller deinstaller.o inst-check \
 inst-check.o inst-copy inst-copy.o inst-dir inst-dir.o inst-link inst-link.o \
@@ -29,32 +32,89 @@ install-dryrun: installer inst-check inst-copy inst-dir inst-link
 install-check: instchk inst-check
 	./instchk
 
+# Mkf-test
+tests:
+	(cd UNIT_TESTS && make)
+tests_clean:
+	(cd UNIT_TESTS && make clean)
+
 # -- SYSDEPS start
+libs-sqlite3:
+	@echo SYSDEPS sqlite3-libs run create libs-sqlite3 
+	@(cd SYSDEPS/modules/sqlite3-libs && ./run)
 _sysinfo.h:
 	@echo SYSDEPS sysinfo run create _sysinfo.h 
 	@(cd SYSDEPS/modules/sysinfo && ./run)
 
 
+sqlite3-libs_clean:
+	@echo SYSDEPS sqlite3-libs clean libs-sqlite3 
+	@(cd SYSDEPS/modules/sqlite3-libs && ./clean)
 sysinfo_clean:
 	@echo SYSDEPS sysinfo clean _sysinfo.h 
 	@(cd SYSDEPS/modules/sysinfo && ./clean)
 
 
 sysdeps_clean:\
+sqlite3-libs_clean \
 sysinfo_clean \
 
 
 # -- SYSDEPS end
 
 
+UNIT_TESTS/getline.ali:\
+ada-compile UNIT_TESTS/getline.adb
+	./ada-compile UNIT_TESTS/getline.adb
+
+UNIT_TESTS/getline.o:\
+UNIT_TESTS/getline.ali
+
+UNIT_TESTS/interp:\
+ada-bind ada-link UNIT_TESTS/interp.ald UNIT_TESTS/interp.ali \
+UNIT_TESTS/getline.ali UNIT_TESTS/rowdump.ali cstringa.ali sqlite3-api.ali \
+sqlite3-constants.ali sqlite3-thin.ali sqlite3-types.ali sqlite3.ali
+	./ada-bind UNIT_TESTS/interp.ali
+	./ada-link UNIT_TESTS/interp UNIT_TESTS/interp.ali
+
+UNIT_TESTS/interp.ali:\
+ada-compile UNIT_TESTS/interp.adb UNIT_TESTS/rowdump.ads sqlite3.ads \
+sqlite3-types.ads
+	./ada-compile UNIT_TESTS/interp.adb
+
+UNIT_TESTS/interp.o:\
+UNIT_TESTS/interp.ali
+
+UNIT_TESTS/rowdump.ads:\
+sqlite3-api.ads
+
+UNIT_TESTS/rowdump.ali:\
+ada-compile UNIT_TESTS/rowdump.adb UNIT_TESTS/rowdump.ads sqlite3.ads
+	./ada-compile UNIT_TESTS/rowdump.adb
+
+UNIT_TESTS/rowdump.o:\
+UNIT_TESTS/rowdump.ali
+
+UNIT_TESTS/test.a:\
+cc-slib UNIT_TESTS/test.sld UNIT_TESTS/test.o
+	./cc-slib UNIT_TESTS/test UNIT_TESTS/test.o
+
+UNIT_TESTS/test.ali:\
+ada-compile UNIT_TESTS/test.adb
+	./ada-compile UNIT_TESTS/test.adb
+
+UNIT_TESTS/test.o:\
+UNIT_TESTS/test.ali
+
 ada-bind:\
-conf-adabind conf-systype conf-adatype conf-adabflags
+conf-adabind conf-systype conf-adatype conf-adabflags conf-adafflist flags-cwd
 
 ada-compile:\
-conf-adacomp conf-adatype conf-systype conf-adacflags
+conf-adacomp conf-adatype conf-systype conf-adacflags conf-adafflist flags-cwd
 
 ada-link:\
-conf-adalink conf-adatype conf-systype conf-adaldflags
+conf-adalink conf-adatype conf-systype conf-adaldflags conf-aldfflist \
+	libs-sqlite3
 
 ada-srcmap:\
 conf-adacomp conf-adatype conf-systype
@@ -307,18 +367,21 @@ ada-compile sqlite3.ads sqlite3.ads
 sqlite3.o:\
 sqlite3.ali
 
-clean-all: sysdeps_clean obj_clean ext_clean
+clean-all: sysdeps_clean tests_clean obj_clean ext_clean
 clean: obj_clean
 obj_clean:
-	rm -f cstringa.ali cstringa.o ctxt/bindir.c ctxt/bindir.o ctxt/ctxt.a \
-	ctxt/dlibdir.c ctxt/dlibdir.o ctxt/incdir.c ctxt/incdir.o ctxt/repos.c \
-	ctxt/repos.o ctxt/slibdir.c ctxt/slibdir.o ctxt/version.c ctxt/version.o \
-	deinstaller deinstaller.o inst-check inst-check.o inst-copy inst-copy.o \
-	inst-dir inst-dir.o inst-link inst-link.o install_core.o install_error.o \
-	installer installer.o instchk instchk.o insthier.o sqlite3-ada-conf \
-	sqlite3-ada-conf.o sqlite3-ada.a sqlite3-api.ali sqlite3-api.o \
-	sqlite3-constants.ali sqlite3-constants.o sqlite3-thin.ali sqlite3-thin.o \
-	sqlite3-types.ali sqlite3-types.o sqlite3.ali sqlite3.o
+	rm -f UNIT_TESTS/getline.ali UNIT_TESTS/getline.o UNIT_TESTS/interp \
+	UNIT_TESTS/interp.ali UNIT_TESTS/interp.o UNIT_TESTS/rowdump.ali \
+	UNIT_TESTS/rowdump.o UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o \
+	cstringa.ali cstringa.o ctxt/bindir.c ctxt/bindir.o ctxt/ctxt.a ctxt/dlibdir.c \
+	ctxt/dlibdir.o ctxt/incdir.c ctxt/incdir.o ctxt/repos.c ctxt/repos.o \
+	ctxt/slibdir.c ctxt/slibdir.o ctxt/version.c ctxt/version.o deinstaller \
+	deinstaller.o inst-check inst-check.o inst-copy inst-copy.o inst-dir inst-dir.o \
+	inst-link inst-link.o install_core.o install_error.o installer installer.o \
+	instchk instchk.o insthier.o sqlite3-ada-conf sqlite3-ada-conf.o sqlite3-ada.a \
+	sqlite3-api.ali sqlite3-api.o sqlite3-constants.ali sqlite3-constants.o \
+	sqlite3-thin.ali sqlite3-thin.o sqlite3-types.ali sqlite3-types.o sqlite3.ali \
+	sqlite3.o
 ext_clean:
 	rm -f conf-adatype conf-cctype conf-ldtype conf-sosuffix conf-systype mk-ctxt
 

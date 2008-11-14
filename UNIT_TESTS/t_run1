@@ -1,0 +1,10 @@
+#!/bin/sh
+
+(cat <<EOF
+create table test1(one varchar(10), two smallint);
+insert into test1 values('hello!', 10);
+insert into test1 values('goodbye', 20);
+select * from test1;
+EOF
+) | ./interp tmp.db
+rm -f tmp.db
