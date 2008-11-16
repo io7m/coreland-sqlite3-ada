@@ -78,6 +78,22 @@ package sqlite3.api is
   for error_t'size use sqlite3.types.int_t'size;
   pragma convention (c, error_t);
 
+  type mode_t is mod 2 ** 32;
+  OPEN_READONLY       : constant mode_t := 16#00000001#;
+  OPEN_READWRITE      : constant mode_t := 16#00000002#;
+  OPEN_CREATE         : constant mode_t := 16#00000004#;
+  OPEN_DELETEONCLOSE  : constant mode_t := 16#00000008#;
+  OPEN_EXCLUSIVE      : constant mode_t := 16#00000010#;
+  OPEN_MAIN_DB        : constant mode_t := 16#00000100#;
+  OPEN_TEMP_DB        : constant mode_t := 16#00000200#;
+  OPEN_TRANSIENT_DB   : constant mode_t := 16#00000400#;
+  OPEN_MAIN_JOURNAL   : constant mode_t := 16#00000800#;
+  OPEN_TEMP_JOURNAL   : constant mode_t := 16#00001000#;
+  OPEN_SUBJOURNAL     : constant mode_t := 16#00002000#;
+  OPEN_MASTER_JOURNAL : constant mode_t := 16#00004000#;
+  OPEN_NOMUTEX        : constant mode_t := 16#00008000#;
+  OPEN_FULLMUTEX      : constant mode_t := 16#00010000#;
+
   type column_names_t is array (natural range <>) of us.unbounded_string;
   type column_values_t is array (natural range <>) of us.unbounded_string;
 
@@ -88,6 +104,7 @@ package sqlite3.api is
 
   procedure open
     (filename : string;
+     mode     : mode_t := OPEN_READWRITE or OPEN_CREATE;
      database : out sqlite3.types.database_t);
   pragma inline (open);
 

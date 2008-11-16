@@ -1,5 +1,6 @@
 #!/bin/sh
 
+rm -f tmp.db
 (cat <<EOF
 create table test1(one varchar(10), two smallint);
 insert into test1 values('hello!', 10);

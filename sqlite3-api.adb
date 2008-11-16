@@ -66,6 +66,9 @@ package body sqlite3.api is
      error_message : sqlite3.types.char_2star_t) return sqlite3.types.int_t;
   pragma import (c, sqlite3_exec, "sqlite3_exec");
 
+  procedure sqlite3_free (data : cs.chars_ptr);
+  pragma import (c, sqlite3_free, "sqlite3_free");
+
   --
   -- exec SQL
   -- 
@@ -111,7 +114,7 @@ package body sqlite3.api is
     if error_val /= sqlite3.constants.sqlite_ok then
       error := true;
       us.set_unbounded_string (error_message, cs.value (emessage));
-      cs.free (emessage);
+      sqlite3_free (emessage);
     else
       error := false;
     end if;
@@ -128,14 +131,23 @@ package body sqlite3.api is
     end if;
   end close;
 
+  function sqlite3_open_v2
+    (file : cs.chars_ptr;
+     db   : access sqlite3.types.database_t;
+     mode : mode_t;
+     vfs  : cs.chars_ptr := cs.null_ptr) return sqlite3.types.int_t;
+  pragma import (c, sqlite3_open_v2, "sqlite3_open_v2");
+
   procedure open
     (filename : string;
+     mode     : mode_t := OPEN_READWRITE or OPEN_CREATE;
      database : out sqlite3.types.database_t)
   is
     fn : aliased c.char_array := c.to_c (filename);
     db : aliased sqlite3.types.database_t;
-    ec : constant sqlite3.types.int_t := sqlite3.thin.open
+    ec : constant sqlite3.types.int_t := sqlite3_open_v2
       (file => cs.to_chars_ptr (fn'unchecked_access),
+       mode => mode,
        db   => db'unchecked_access);
   begin
     database := db;

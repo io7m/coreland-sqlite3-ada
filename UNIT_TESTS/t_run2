@@ -1,0 +1,8 @@
+#!/bin/sh
+
+rm -f tmp.db
+(cat <<EOF
+select * from test1;
+EOF
+) | ./interp tmp.db
+rm -f tmp.db
