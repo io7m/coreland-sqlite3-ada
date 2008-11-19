@@ -338,10 +338,10 @@ cc-compile sqlite3-ada-conf.c ctxt.h _sysinfo.h
 	./cc-compile sqlite3-ada-conf.c
 
 sqlite3-ada.a:\
-cc-slib sqlite3-ada.sld sqlite3-api.o sqlite3-constants.o sqlite3-thin.o \
-sqlite3-types.o sqlite3.o cstringa.o
-	./cc-slib sqlite3-ada sqlite3-api.o sqlite3-constants.o sqlite3-thin.o \
-	sqlite3-types.o sqlite3.o cstringa.o
+cc-slib sqlite3-ada.sld cstringa.o sqlite3-api.o sqlite3-constants.o \
+sqlite3-thin.o sqlite3-types.o sqlite3-utils.o sqlite3.o
+	./cc-slib sqlite3-ada cstringa.o sqlite3-api.o sqlite3-constants.o \
+	sqlite3-thin.o sqlite3-types.o sqlite3-utils.o sqlite3.o
 
 sqlite3-api.ads:\
 sqlite3-types.ads
