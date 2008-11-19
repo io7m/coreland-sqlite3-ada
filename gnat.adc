@@ -16,6 +16,10 @@ pragma source_file_name(sqlite3.thin, spec_file_name => "sqlite3-thin.ads");
 -- ./sqlite3-types.apk
 pragma source_file_name(sqlite3.types, spec_file_name => "sqlite3-types.ads");
 
+-- ./sqlite3-utils.apk
+pragma source_file_name(sqlite3.utils, spec_file_name => "sqlite3-utils.ads");
+pragma source_file_name(sqlite3.utils, body_file_name => "sqlite3-utils.adb");
+
 -- ./sqlite3.apk
 pragma source_file_name(sqlite3, spec_file_name => "sqlite3.ads");
 

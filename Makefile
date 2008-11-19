@@ -3,6 +3,7 @@
 default: all
 
 all:\
+UNIT_TESTS/escape UNIT_TESTS/escape.ali UNIT_TESTS/escape.o \
 UNIT_TESTS/getline.ali UNIT_TESTS/getline.o UNIT_TESTS/interp \
 UNIT_TESTS/interp.ali UNIT_TESTS/interp.o UNIT_TESTS/rowdump.ali \
 UNIT_TESTS/rowdump.o UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o \
@@ -12,7 +13,8 @@ inst-check.o inst-copy inst-copy.o inst-dir inst-dir.o inst-link inst-link.o \
 install_core.o install_error.o installer installer.o instchk instchk.o \
 insthier.o sqlite3-ada-conf sqlite3-ada-conf.o sqlite3-ada.a sqlite3-api.ali \
 sqlite3-api.o sqlite3-constants.ali sqlite3-constants.o sqlite3-thin.ali \
-sqlite3-thin.o sqlite3-types.ali sqlite3-types.o sqlite3.ali sqlite3.o
+sqlite3-thin.o sqlite3-types.ali sqlite3-types.o sqlite3-utils.ali \
+sqlite3-utils.o sqlite3.ali sqlite3.o
 
 # Mkf-deinstall
 deinstall: deinstaller inst-check inst-copy inst-dir inst-link
@@ -62,6 +64,19 @@ sysinfo_clean \
 
 # -- SYSDEPS end
 
+
+UNIT_TESTS/escape:\
+ada-bind ada-link UNIT_TESTS/escape.ald UNIT_TESTS/escape.ali sqlite3-utils.ali \
+sqlite3.ali
+	./ada-bind UNIT_TESTS/escape.ali
+	./ada-link UNIT_TESTS/escape UNIT_TESTS/escape.ali
+
+UNIT_TESTS/escape.ali:\
+ada-compile UNIT_TESTS/escape.adb sqlite3-utils.ads
+	./ada-compile UNIT_TESTS/escape.adb
+
+UNIT_TESTS/escape.o:\
+UNIT_TESTS/escape.ali
 
 UNIT_TESTS/getline.ali:\
 ada-compile UNIT_TESTS/getline.adb
@@ -360,6 +375,13 @@ ada-compile sqlite3-types.ads sqlite3-types.ads
 sqlite3-types.o:\
 sqlite3-types.ali
 
+sqlite3-utils.ali:\
+ada-compile sqlite3-utils.adb sqlite3-utils.ads
+	./ada-compile sqlite3-utils.adb
+
+sqlite3-utils.o:\
+sqlite3-utils.ali
+
 sqlite3.ali:\
 ada-compile sqlite3.ads sqlite3.ads
 	./ada-compile sqlite3.ads
@@ -370,7 +392,8 @@ sqlite3.ali
 clean-all: sysdeps_clean tests_clean obj_clean ext_clean
 clean: obj_clean
 obj_clean:
-	rm -f UNIT_TESTS/getline.ali UNIT_TESTS/getline.o UNIT_TESTS/interp \
+	rm -f UNIT_TESTS/escape UNIT_TESTS/escape.ali UNIT_TESTS/escape.o \
+	UNIT_TESTS/getline.ali UNIT_TESTS/getline.o UNIT_TESTS/interp \
 	UNIT_TESTS/interp.ali UNIT_TESTS/interp.o UNIT_TESTS/rowdump.ali \
 	UNIT_TESTS/rowdump.o UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o \
 	cstringa.ali cstringa.o ctxt/bindir.c ctxt/bindir.o ctxt/ctxt.a ctxt/dlibdir.c \
@@ -380,8 +403,8 @@ obj_clean:
 	inst-link inst-link.o install_core.o install_error.o installer installer.o \
 	instchk instchk.o insthier.o sqlite3-ada-conf sqlite3-ada-conf.o sqlite3-ada.a \
 	sqlite3-api.ali sqlite3-api.o sqlite3-constants.ali sqlite3-constants.o \
-	sqlite3-thin.ali sqlite3-thin.o sqlite3-types.ali sqlite3-types.o sqlite3.ali \
-	sqlite3.o
+	sqlite3-thin.ali sqlite3-thin.o sqlite3-types.ali sqlite3-types.o \
+	sqlite3-utils.ali sqlite3-utils.o sqlite3.ali sqlite3.o
 ext_clean:
 	rm -f conf-adatype conf-cctype conf-ldtype conf-sosuffix conf-systype mk-ctxt
 
