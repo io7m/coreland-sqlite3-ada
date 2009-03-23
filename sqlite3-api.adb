@@ -1,4 +1,3 @@
-with cstringa;
 with interfaces.c.strings;
 with interfaces.c;
 with sqlite3.constants;

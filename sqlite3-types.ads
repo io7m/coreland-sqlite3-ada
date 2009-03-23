@@ -2,9 +2,9 @@ with interfaces.c;
 with interfaces.c.strings;
 with system;
 
-package sqlite3.types is
-  package c renames interfaces.c;
-  package cs renames interfaces.c.strings;
+package SQLite3.Types is
+  package C renames interfaces.c;
+  package CS renames interfaces.c.strings;
 
   -- integer types
   subtype int_t is c.int;
@@ -210,4 +210,4 @@ package sqlite3.types is
     (data : void_ptr_t);
   pragma convention (c, rollback_callback_t);
 
-end sqlite3.types;
+end SQLite3.types;

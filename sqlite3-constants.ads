@@ -1,4 +1,4 @@
-package sqlite3.constants is
+package SQLite3.Constants is
 
   SQLITE_OK                       : constant := 0;  -- Successful result 
   SQLITE_ERROR                    : constant := 1;  -- SQL error or missing database 
@@ -9,7 +9,7 @@ package sqlite3.constants is
   SQLITE_LOCKED                   : constant := 6;  -- A table in the database is locked 
   SQLITE_NOMEM                    : constant := 7;  -- A malloc() failed 
   SQLITE_READONLY                 : constant := 8;  -- Attempt to write a readonly database 
-  SQLITE_INTERRUPT                : constant := 9;  -- Operation terminated by sqlite3_interrupt()
+  SQLITE_INTERRUPT                : constant := 9;  -- Operation terminated by SQLite3_interrupt()
   SQLITE_IOERR                    : constant := 10;  -- Some kind of disk I/O error occurred 
   SQLITE_CORRUPT                  : constant := 11;  -- The database disk image is malformed 
   SQLITE_NOTFOUND                 : constant := 12;  -- NOT USED. Table or record not found 
@@ -25,10 +25,10 @@ package sqlite3.constants is
   SQLITE_NOLFS                    : constant := 22;  -- Uses OS features not supported on host 
   SQLITE_AUTH                     : constant := 23;  -- Authorization denied 
   SQLITE_FORMAT                   : constant := 24;  -- Auxiliary database format error 
-  SQLITE_RANGE                    : constant := 25;  -- 2nd parameter to sqlite3_bind out of range 
+  SQLITE_RANGE                    : constant := 25;  -- 2nd parameter to SQLite3_bind out of range 
   SQLITE_NOTADB                   : constant := 26;  -- File opened that is not a database file 
-  SQLITE_ROW                      : constant := 100; -- sqlite3_step() has another row ready 
-  SQLITE_DONE                     : constant := 101; -- sqlite3_step() has finished executing 
+  SQLITE_ROW                      : constant := 100; -- SQLite3_step() has another row ready 
+  SQLITE_DONE                     : constant := 101; -- SQLite3_step() has finished executing 
   SQLITE_IOERR_READ               : constant := 2#00000001_00001010#;
   SQLITE_IOERR_SHORT_READ         : constant := 2#00000010_00001010#;
   SQLITE_IOERR_WRITE              : constant := 2#00000011_00001010#;
@@ -88,4 +88,4 @@ package sqlite3.constants is
   SQLITE_INDEX_CONSTRAINT_GE      : constant := 32;
   SQLITE_INDEX_CONSTRAINT_MATCH   : constant := 64;
 
-end sqlite3.constants;
+end SQLite3.constants;

@@ -1,3 +1,3 @@
-package sqlite3 is
-  pragma pure (sqlite3);
-end sqlite3;
+package SQLite3 is
+  pragma Pure (SQLite3);
+end SQLite3;

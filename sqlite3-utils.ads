@@ -1,5 +1,5 @@
-package sqlite3.utils is
+package SQLite3.Utils is
 
   function escape (source : string) return string;
 
-end sqlite3.utils;
+end SQLite3.Utils;
