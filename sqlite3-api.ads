@@ -123,4 +123,7 @@ package SQLite3.API is
   function Error_Message (Database : SQLite3.Types.Database_t) return String;
   pragma Inline (Error_Message);
 
+  function Error_Code (Database : SQLite3.Types.Database_t) return Error_t;
+  pragma Inline (Error_Code);
+
 end SQLite3.API;

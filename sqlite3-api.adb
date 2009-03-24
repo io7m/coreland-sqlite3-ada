@@ -159,4 +159,9 @@ package body SQLite3.API is
     return CS.Value (SQLite3.Thin.errmsg (Database));
   end Error_Message;
 
+  function Error_Code (Database : SQLite3.Types.Database_t) return Error_t is
+  begin
+    return Error_t'Val (SQLite3.Thin.errcode (Database));
+  end Error_Code;
+
 end SQLite3.API;
