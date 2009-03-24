@@ -1,1 +1,5 @@
 20081112 version: sqlite3-ada 0.1
+20090324 code: updated code to pass style checks.
+20090324 code: removed cstringa and added dependency on c_string.
+20090324 note: version numbers now tracking official sqlite3 C library releases.
+20090324 version: sqlite3-ada 0.6.4

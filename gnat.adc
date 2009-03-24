@@ -3,9 +3,6 @@
 pragma source_file_name(sqlite3.api, spec_file_name => "sqlite3-api.ads");
 pragma source_file_name(sqlite3.api, body_file_name => "sqlite3-api.adb");
 
--- ./sqlite3.apk
-pragma source_file_name(sqlite3, spec_file_name => "sqlite3.ads");
-
 -- ./sqlite3-constants.apk
 pragma source_file_name(sqlite3.constants, spec_file_name => "sqlite3-constants.ads");
 
@@ -18,6 +15,9 @@ pragma source_file_name(sqlite3.types, spec_file_name => "sqlite3-types.ads");
 -- ./sqlite3-utils.apk
 pragma source_file_name(sqlite3.utils, spec_file_name => "sqlite3-utils.ads");
 pragma source_file_name(sqlite3.utils, body_file_name => "sqlite3-utils.adb");
+
+-- ./sqlite3.apk
+pragma source_file_name(sqlite3, spec_file_name => "sqlite3.ads");
 
 -- UNIT_TESTS/getline.apk
 pragma source_file_name(getline, spec_file_name => "getline.ads");

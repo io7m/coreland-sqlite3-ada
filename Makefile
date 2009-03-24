@@ -40,6 +40,12 @@ tests_clean:
 	(cd UNIT_TESTS && make clean)
 
 # -- SYSDEPS start
+flags-c_string:
+	@echo SYSDEPS c_string-flags run create flags-c_string 
+	@(cd SYSDEPS/modules/c_string-flags && ./run)
+libs-c_string-S:
+	@echo SYSDEPS c_string-libs-S run create libs-c_string-S 
+	@(cd SYSDEPS/modules/c_string-libs-S && ./run)
 libs-sqlite3:
 	@echo SYSDEPS sqlite3-libs run create libs-sqlite3 
 	@(cd SYSDEPS/modules/sqlite3-libs && ./run)
@@ -48,6 +54,12 @@ _sysinfo.h:
 	@(cd SYSDEPS/modules/sysinfo && ./run)
 
 
+c_string-flags_clean:
+	@echo SYSDEPS c_string-flags clean flags-c_string 
+	@(cd SYSDEPS/modules/c_string-flags && ./clean)
+c_string-libs-S_clean:
+	@echo SYSDEPS c_string-libs-S clean libs-c_string-S 
+	@(cd SYSDEPS/modules/c_string-libs-S && ./clean)
 sqlite3-libs_clean:
 	@echo SYSDEPS sqlite3-libs clean libs-sqlite3 
 	@(cd SYSDEPS/modules/sqlite3-libs && ./clean)
@@ -57,6 +69,8 @@ sysinfo_clean:
 
 
 sysdeps_clean:\
+c_string-flags_clean \
+c_string-libs-S_clean \
 sqlite3-libs_clean \
 sysinfo_clean \
 
@@ -152,11 +166,11 @@ mk-adatype
 	./mk-adatype > conf-adatype.tmp && mv conf-adatype.tmp conf-adatype
 
 conf-cctype:\
-conf-cc conf-cc mk-cctype
+conf-cc mk-cctype
 	./mk-cctype > conf-cctype.tmp && mv conf-cctype.tmp conf-cctype
 
 conf-ldtype:\
-conf-ld conf-ld mk-ldtype
+conf-ld mk-ldtype
 	./mk-ldtype > conf-ldtype.tmp && mv conf-ldtype.tmp conf-ldtype
 
 conf-sosuffix:\
