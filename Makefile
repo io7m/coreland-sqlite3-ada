@@ -7,14 +7,13 @@ UNIT_TESTS/escape UNIT_TESTS/escape.ali UNIT_TESTS/escape.o \
 UNIT_TESTS/getline.ali UNIT_TESTS/getline.o UNIT_TESTS/interp \
 UNIT_TESTS/interp.ali UNIT_TESTS/interp.o UNIT_TESTS/rowdump.ali \
 UNIT_TESTS/rowdump.o UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o \
-cstringa.ali cstringa.o ctxt/bindir.o ctxt/ctxt.a ctxt/dlibdir.o ctxt/incdir.o \
-ctxt/repos.o ctxt/slibdir.o ctxt/version.o deinstaller deinstaller.o \
-install-core.o install-error.o install-posix.o install-win32.o install.a \
-installer installer.o instchk instchk.o insthier.o sqlite3-ada-conf \
-sqlite3-ada-conf.o sqlite3-ada.a sqlite3-api.ali sqlite3-api.o \
-sqlite3-constants.ali sqlite3-constants.o sqlite3-thin.ali sqlite3-thin.o \
-sqlite3-types.ali sqlite3-types.o sqlite3-utils.ali sqlite3-utils.o sqlite3.ali \
-sqlite3.o
+ctxt/bindir.o ctxt/ctxt.a ctxt/dlibdir.o ctxt/incdir.o ctxt/repos.o \
+ctxt/slibdir.o ctxt/version.o deinstaller deinstaller.o install-core.o \
+install-error.o install-posix.o install-win32.o install.a installer installer.o \
+instchk instchk.o insthier.o sqlite3-ada-conf sqlite3-ada-conf.o sqlite3-ada.a \
+sqlite3-api.ali sqlite3-api.o sqlite3-constants.ali sqlite3-constants.o \
+sqlite3-thin.ali sqlite3-thin.o sqlite3-types.ali sqlite3-types.o \
+sqlite3-utils.ali sqlite3-utils.o sqlite3.ali sqlite3.o
 
 # Mkf-deinstall
 deinstall: deinstaller conf-sosuffix
@@ -72,14 +71,14 @@ sqlite3.ali
 	./ada-link UNIT_TESTS/escape UNIT_TESTS/escape.ali
 
 UNIT_TESTS/escape.ali:\
-ada-compile UNIT_TESTS/escape.adb sqlite3-utils.ads
+ada-compile UNIT_TESTS/escape.adb sqlite3-utils.ali
 	./ada-compile UNIT_TESTS/escape.adb
 
 UNIT_TESTS/escape.o:\
 UNIT_TESTS/escape.ali
 
 UNIT_TESTS/getline.ali:\
-ada-compile UNIT_TESTS/getline.adb
+ada-compile UNIT_TESTS/getline.adb UNIT_TESTS/getline.ads
 	./ada-compile UNIT_TESTS/getline.adb
 
 UNIT_TESTS/getline.o:\
@@ -87,24 +86,24 @@ UNIT_TESTS/getline.ali
 
 UNIT_TESTS/interp:\
 ada-bind ada-link UNIT_TESTS/interp.ald UNIT_TESTS/interp.ali \
-UNIT_TESTS/getline.ali UNIT_TESTS/rowdump.ali cstringa.ali sqlite3-api.ali \
+UNIT_TESTS/getline.ali UNIT_TESTS/rowdump.ali sqlite3-api.ali \
 sqlite3-constants.ali sqlite3-thin.ali sqlite3-types.ali sqlite3.ali
 	./ada-bind UNIT_TESTS/interp.ali
 	./ada-link UNIT_TESTS/interp UNIT_TESTS/interp.ali
 
 UNIT_TESTS/interp.ali:\
-ada-compile UNIT_TESTS/interp.adb UNIT_TESTS/rowdump.ads sqlite3.ads \
-sqlite3-types.ads
+ada-compile UNIT_TESTS/interp.adb UNIT_TESTS/rowdump.ali UNIT_TESTS/getline.ali \
+sqlite3.ali sqlite3-types.ali
 	./ada-compile UNIT_TESTS/interp.adb
 
 UNIT_TESTS/interp.o:\
 UNIT_TESTS/interp.ali
 
 UNIT_TESTS/rowdump.ads:\
-sqlite3-api.ads
+sqlite3-api.ali
 
 UNIT_TESTS/rowdump.ali:\
-ada-compile UNIT_TESTS/rowdump.adb UNIT_TESTS/rowdump.ads sqlite3.ads
+ada-compile UNIT_TESTS/rowdump.adb UNIT_TESTS/rowdump.ads sqlite3.ali
 	./ada-compile UNIT_TESTS/rowdump.adb
 
 UNIT_TESTS/rowdump.o:\
@@ -115,21 +114,23 @@ cc-slib UNIT_TESTS/test.sld UNIT_TESTS/test.o
 	./cc-slib UNIT_TESTS/test UNIT_TESTS/test.o
 
 UNIT_TESTS/test.ali:\
-ada-compile UNIT_TESTS/test.adb
+ada-compile UNIT_TESTS/test.adb UNIT_TESTS/test.ads
 	./ada-compile UNIT_TESTS/test.adb
 
 UNIT_TESTS/test.o:\
 UNIT_TESTS/test.ali
 
 ada-bind:\
-conf-adabind conf-systype conf-adatype conf-adabflags conf-adafflist flags-cwd
+conf-adabind conf-systype conf-adatype conf-adabflags conf-adafflist flags-cwd \
+	flags-c_string
 
 ada-compile:\
-conf-adacomp conf-adatype conf-systype conf-adacflags conf-adafflist flags-cwd
+conf-adacomp conf-adatype conf-systype conf-adacflags conf-adafflist flags-cwd \
+	flags-c_string
 
 ada-link:\
 conf-adalink conf-adatype conf-systype conf-adaldflags conf-aldfflist \
-	libs-sqlite3
+	libs-sqlite3 libs-c_string-S
 
 ada-srcmap:\
 conf-adacomp conf-adatype conf-systype
@@ -151,11 +152,11 @@ mk-adatype
 	./mk-adatype > conf-adatype.tmp && mv conf-adatype.tmp conf-adatype
 
 conf-cctype:\
-conf-cc mk-cctype
+conf-cc conf-cc mk-cctype
 	./mk-cctype > conf-cctype.tmp && mv conf-cctype.tmp conf-cctype
 
 conf-ldtype:\
-conf-ld mk-ldtype
+conf-ld conf-ld mk-ldtype
 	./mk-ldtype > conf-ldtype.tmp && mv conf-ldtype.tmp conf-ldtype
 
 conf-sosuffix:\
@@ -165,13 +166,6 @@ mk-sosuffix
 conf-systype:\
 mk-systype
 	./mk-systype > conf-systype.tmp && mv conf-systype.tmp conf-systype
-
-cstringa.ali:\
-ada-compile cstringa.adb cstringa.ads
-	./ada-compile cstringa.adb
-
-cstringa.o:\
-cstringa.ali
 
 # ctxt/bindir.c.mff
 ctxt/bindir.c: mk-ctxt conf-bindir
@@ -317,45 +311,48 @@ cc-compile sqlite3-ada-conf.c ctxt.h _sysinfo.h
 	./cc-compile sqlite3-ada-conf.c
 
 sqlite3-ada.a:\
-cc-slib sqlite3-ada.sld cstringa.o sqlite3-api.o sqlite3-constants.o \
-sqlite3-thin.o sqlite3-types.o sqlite3-utils.o sqlite3.o
-	./cc-slib sqlite3-ada cstringa.o sqlite3-api.o sqlite3-constants.o \
-	sqlite3-thin.o sqlite3-types.o sqlite3-utils.o sqlite3.o
+cc-slib sqlite3-ada.sld sqlite3-api.o sqlite3-constants.o sqlite3-thin.o \
+sqlite3-types.o sqlite3-utils.o sqlite3.o
+	./cc-slib sqlite3-ada sqlite3-api.o sqlite3-constants.o sqlite3-thin.o \
+	sqlite3-types.o sqlite3-utils.o sqlite3.o
 
 sqlite3-api.ads:\
-sqlite3-types.ads
+sqlite3.ali sqlite3-types.ali
 
 sqlite3-api.ali:\
-ada-compile sqlite3-api.adb sqlite3-api.ads cstringa.ads sqlite3-constants.ads \
-sqlite3-thin.ads
+ada-compile sqlite3-api.adb sqlite3.ali sqlite3-api.ads sqlite3-constants.ali \
+sqlite3-thin.ali
 	./ada-compile sqlite3-api.adb
 
 sqlite3-api.o:\
 sqlite3-api.ali
 
 sqlite3-constants.ali:\
-ada-compile sqlite3-constants.ads sqlite3-constants.ads
+ada-compile sqlite3-constants.ads sqlite3.ali sqlite3-constants.ads
 	./ada-compile sqlite3-constants.ads
 
 sqlite3-constants.o:\
 sqlite3-constants.ali
 
 sqlite3-thin.ali:\
-ada-compile sqlite3-thin.ads sqlite3-thin.ads sqlite3-types.ads
+ada-compile sqlite3-thin.ads sqlite3.ali sqlite3-thin.ads sqlite3-types.ali
 	./ada-compile sqlite3-thin.ads
 
 sqlite3-thin.o:\
 sqlite3-thin.ali
 
 sqlite3-types.ali:\
-ada-compile sqlite3-types.ads sqlite3-types.ads
+ada-compile sqlite3-types.ads sqlite3.ali sqlite3-types.ads
 	./ada-compile sqlite3-types.ads
 
 sqlite3-types.o:\
 sqlite3-types.ali
 
+sqlite3-utils.ads:\
+sqlite3.ali
+
 sqlite3-utils.ali:\
-ada-compile sqlite3-utils.adb sqlite3-utils.ads
+ada-compile sqlite3-utils.adb sqlite3.ali sqlite3-utils.ads
 	./ada-compile sqlite3-utils.adb
 
 sqlite3-utils.o:\
@@ -375,11 +372,11 @@ obj_clean:
 	UNIT_TESTS/getline.ali UNIT_TESTS/getline.o UNIT_TESTS/interp \
 	UNIT_TESTS/interp.ali UNIT_TESTS/interp.o UNIT_TESTS/rowdump.ali \
 	UNIT_TESTS/rowdump.o UNIT_TESTS/test.a UNIT_TESTS/test.ali UNIT_TESTS/test.o \
-	cstringa.ali cstringa.o ctxt/bindir.c ctxt/bindir.o ctxt/ctxt.a ctxt/dlibdir.c \
-	ctxt/dlibdir.o ctxt/incdir.c ctxt/incdir.o ctxt/repos.c ctxt/repos.o \
-	ctxt/slibdir.c ctxt/slibdir.o ctxt/version.c ctxt/version.o deinstaller \
-	deinstaller.o install-core.o install-error.o install-posix.o install-win32.o \
-	install.a installer installer.o instchk instchk.o insthier.o sqlite3-ada-conf \
+	ctxt/bindir.c ctxt/bindir.o ctxt/ctxt.a ctxt/dlibdir.c ctxt/dlibdir.o \
+	ctxt/incdir.c ctxt/incdir.o ctxt/repos.c ctxt/repos.o ctxt/slibdir.c \
+	ctxt/slibdir.o ctxt/version.c ctxt/version.o deinstaller deinstaller.o \
+	install-core.o install-error.o install-posix.o install-win32.o install.a \
+	installer installer.o instchk instchk.o insthier.o sqlite3-ada-conf \
 	sqlite3-ada-conf.o sqlite3-ada.a sqlite3-api.ali sqlite3-api.o \
 	sqlite3-constants.ali sqlite3-constants.o sqlite3-thin.ali sqlite3-thin.o \
 	sqlite3-types.ali sqlite3-types.o sqlite3-utils.ali sqlite3-utils.o sqlite3.ali \

@@ -1,18 +1,18 @@
-package body sqlite3.utils is
+package body SQLite3.Utils is
 
-  function escape (source : string) return string is
-    result : string (1 .. source'length * 2);
-    last   : natural := 0;
+  function Escape (Source : String) return String is
+    Result : String (1 .. Source'Length * 2);
+    Last   : Natural := 0;
   begin
-    for i in source'range loop
-      if source (i) = ''' then
-        last := last + 1;
-        result (last) := ''';
+    for Index in Source'Range loop
+      if Source (Index) = ''' then
+        Last := Last + 1;
+        Result (Last) := ''';
       end if;
-      last := last + 1;
-      result (last) := source (i);
+      Last := Last + 1;
+      Result (Last) := Source (Index);
     end loop;
-    return ''' & result (1 .. last) & ''';
-  end escape;
+    return ''' & Result (1 .. Last) & ''';
+  end Escape;
 
-end sqlite3.utils;
+end SQLite3.Utils;

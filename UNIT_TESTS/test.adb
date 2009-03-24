@@ -1,20 +1,20 @@
-with ada.text_io;
+with Ada.Text_IO;
 
 package body test is
-  package io renames ada.text_io;
+  package IO renames Ada.Text_IO;
 
-  procedure sys_exit (ecode : integer);
-  pragma import (c, sys_exit, "exit");
+  procedure sys_exit (ecode : Integer);
+  pragma Import (C, sys_exit, "exit");
 
   procedure assert
-    (check        : in boolean;
-     pass_message : in string := "assertion passed";
-     fail_message : in string := "assertion failed") is
+    (check        : in Boolean;
+     pass_message : in String := "assertion passed";
+     fail_message : in String := "assertion failed") is
   begin
     if check then
-      io.put_line (io.current_error, "pass: " & pass_message);
+      IO.Put_Line (IO.Current_Error, "pass: " & pass_message);
     else
-      io.put_line (io.current_error, "fail: " & fail_message);
+      IO.Put_Line (IO.Current_Error, "fail: " & fail_message);
       sys_exit (1);
     end if;
   end assert;

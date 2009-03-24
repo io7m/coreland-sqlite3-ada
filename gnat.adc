@@ -1,11 +1,10 @@
 
--- ./cstringa.apk
-pragma source_file_name(cstringa, spec_file_name => "cstringa.ads");
-pragma source_file_name(cstringa, body_file_name => "cstringa.adb");
-
 -- ./sqlite3-api.apk
 pragma source_file_name(sqlite3.api, spec_file_name => "sqlite3-api.ads");
 pragma source_file_name(sqlite3.api, body_file_name => "sqlite3-api.adb");
+
+-- ./sqlite3.apk
+pragma source_file_name(sqlite3, spec_file_name => "sqlite3.ads");
 
 -- ./sqlite3-constants.apk
 pragma source_file_name(sqlite3.constants, spec_file_name => "sqlite3-constants.ads");
@@ -20,9 +19,14 @@ pragma source_file_name(sqlite3.types, spec_file_name => "sqlite3-types.ads");
 pragma source_file_name(sqlite3.utils, spec_file_name => "sqlite3-utils.ads");
 pragma source_file_name(sqlite3.utils, body_file_name => "sqlite3-utils.adb");
 
--- ./sqlite3.apk
-pragma source_file_name(sqlite3, spec_file_name => "sqlite3.ads");
+-- UNIT_TESTS/getline.apk
+pragma source_file_name(getline, spec_file_name => "getline.ads");
+pragma source_file_name(getline, body_file_name => "getline.adb");
 
 -- UNIT_TESTS/rowdump.apk
 pragma source_file_name(rowdump, spec_file_name => "rowdump.ads");
 pragma source_file_name(rowdump, body_file_name => "rowdump.adb");
+
+-- UNIT_TESTS/test.apk
+pragma source_file_name(test, spec_file_name => "test.ads");
+pragma source_file_name(test, body_file_name => "test.adb");

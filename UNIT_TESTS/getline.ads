@@ -1,10 +1,10 @@
-with ada.text_io;
-with ada.strings.unbounded;
+with Ada.Text_IO;
+with Ada.Strings.Unbounded;
 
 package getline is
 
   procedure get
-    (file :  in ada.text_io.file_type;
-     item : out ada.strings.unbounded.unbounded_string);
+    (File : in Ada.Text_IO.File_Type;
+     Item : out Ada.Strings.Unbounded.Unbounded_String);
 
 end getline;

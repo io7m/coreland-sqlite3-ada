@@ -1,11 +1,9 @@
-with ada.command_line;
-with ada.text_io;
-with sqlite3.utils;
+with Ada.Command_Line;
+with Ada.Text_IO;
+with SQLite3.Utils;
 
-procedure escape is
-  package io renames ada.text_io;
+procedure Escape is
+  package IO renames Ada.Text_IO;
 begin
-  io.put_line
-    (ada.command_line.argument (1) & " => " &
-     sqlite3.utils.escape (ada.command_line.argument (1)));
-end escape;
+  IO.Put_Line (Ada.Command_Line.Argument (1) & " => " & SQLite3.Utils.Escape (Ada.Command_Line.Argument (1)));
+end Escape;

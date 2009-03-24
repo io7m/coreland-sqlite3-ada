@@ -1,54 +1,55 @@
-with ada.command_line;
-with ada.io_exceptions;
-with ada.strings.unbounded;
-with ada.text_io;
+with Ada.Command_Line;
+with Ada.IO_Exceptions;
+with Ada.Strings.Unbounded;
+with Ada.Text_IO;
 
 with rowdump;
 with getline;
 
-with sqlite3;
-with sqlite3.types;
+with SQLite3;
+with SQLite3.Types;
 
 procedure interp is
-  package io renames ada.text_io;
-  package us renames ada.strings.unbounded;
+  package IO renames Ada.Text_IO;
+  package US renames Ada.Strings.Unbounded;
 
-  use type rowdump.sqlite3_api.error_t;
-  use type us.unbounded_string;
+  use type rowdump.SQLite3_API.Error_t;
+  use type US.Unbounded_String;
 
-  database      : sqlite3.types.database_t;
-  buffer        : us.unbounded_string;
-  error_message : us.unbounded_string;
-  exec_failed   : boolean;
-  x             : aliased integer;
+  Database      : SQLite3.Types.Database_t;
+  buffer        : US.Unbounded_String;
+  Error_Message : US.Unbounded_String;
+  exec_failed   : Boolean;
+  x             : aliased Integer;
 
 begin
   -- open database
-  rowdump.sqlite3_api.open
-    (filename => ada.command_line.argument (1),
-     database => database);
+  rowdump.SQLite3_API.Open
+    (Database  => Database,
+     File_Name => Ada.Command_Line.Argument (1));
 
   -- read SQL from stdin
   begin
     loop
-      getline.get (io.current_input, buffer);
+      getline.get (IO.Current_Input, buffer);
     end loop;
   exception
-    when ada.io_exceptions.end_error => null;
+    when Ada.IO_Exceptions.End_Error =>
+      null;
   end;
 
   -- execute SQL
-  rowdump.sqlite3_api.exec
-    (database      => database,
-     sql           => us.to_string (buffer),
-     error         => exec_failed,
-     callback      => rowdump.row_callback'access,
-     user_data     => x'unchecked_access,
-     error_message => error_message);
+  rowdump.SQLite3_API.Exec
+   (Database      => Database,
+    SQL           => US.To_String (buffer),
+    Error         => exec_failed,
+    Callback      => rowdump.Row_Callback'Access,
+    User_Data     => x'Unchecked_Access,
+    Error_Message => Error_Message);
   if exec_failed then
-    io.put_line ("exec: " & us.to_string (error_message));
+    IO.Put_Line ("exec: " & US.To_String (Error_Message));
   end if;
 
-  rowdump.sqlite3_api.close (database => database);
+  rowdump.SQLite3_API.Close (Database);
 
 end interp;

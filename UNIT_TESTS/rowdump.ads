@@ -1,16 +1,18 @@
-with sqlite3.api;
+with SQLite3.API;
 
-pragma elaborate_all (sqlite3.api);
+pragma Elaborate_All (SQLite3.API);
 
 package rowdump is
 
-  type int_access_t is access all integer;
-  package sqlite3_api is new sqlite3.api
-    (user_data_type => integer, user_data_access_type => int_access_t);
+  type Int_Access_t is access all Integer;
 
-  procedure row_callback
-    (column_names  : sqlite3_api.column_names_t;
-     column_values : sqlite3_api.column_values_t;
-     user_data     : int_access_t);
+  package SQLite3_API is new SQLite3.API
+    (User_Data_Type        => Integer,
+     User_Data_Access_Type => Int_Access_t);
+
+  procedure Row_Callback
+    (Column_Names  : SQLite3_API.Column_Names_t;
+     Column_Values : SQLite3_API.Column_Values_t;
+     User_Data     : Int_Access_t);
 
 end rowdump;

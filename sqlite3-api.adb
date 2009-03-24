@@ -1,164 +1,162 @@
-with interfaces.c.strings;
-with interfaces.c;
-with sqlite3.constants;
-with sqlite3.thin;
+with Interfaces.C.Strings;
+with Interfaces.C;
+with SQLite3.Constants;
+with SQLite3.Thin;
 
-package body sqlite3.api is
-  package c renames interfaces.c;
-  package cs renames interfaces.c.strings;
+package body SQLite3.API is
+  package C renames Interfaces.C;
+  package CS renames Interfaces.C.Strings;
 
-  use type cs.chars_ptr;
-  use type sqlite3.types.int_t;
+  use type CS.chars_ptr;
+  use type SQLite3.Types.int_t;
 
-  type cbridge_context_t is record
-    user_data : user_data_access_type;
-    callback  : exec_callback_t;
+  type CBridge_Context_t is record
+    User_Data : User_Data_Access_Type;
+    Callback  : access procedure
+      (Column_Names  : Column_Names_t;
+       Column_Values : Column_Values_t;
+       User_Data     : User_Data_Access_Type);
   end record;
-  pragma convention (c, cbridge_context_t);
+  pragma Convention (C, CBridge_Context_t);
 
-  function exec_cbridge
-    (context       : access cbridge_context_t;
-     num_columns   : sqlite3.types.int_t;
-     column_values : sqlite3.types.char_2star_t;
-     column_names  : sqlite3.types.char_2star_t) return sqlite3.types.int_t;
-  pragma convention (c, exec_cbridge);
- 
+  function Exec_CBridge
+    (context       : access CBridge_Context_t;
+     num_columns   : SQLite3.Types.int_t;
+     Column_Values : SQLite3.Types.char_2star_t;
+     Column_Names  : SQLite3.Types.char_2star_t) return SQLite3.Types.int_t;
+  pragma Convention (C, Exec_CBridge);
+
   --
-  -- type conversion callback
+  -- type conversion Callback
   --
 
-  function exec_cbridge
-    (context       : access cbridge_context_t;
-     num_columns   : sqlite3.types.int_t;
-     column_values : sqlite3.types.char_2star_t;
-     column_names  : sqlite3.types.char_2star_t) return sqlite3.types.int_t
+  function Exec_CBridge
+    (context       : access CBridge_Context_t;
+     num_columns   : SQLite3.Types.int_t;
+     Column_Values : SQLite3.Types.char_2star_t;
+     Column_Names  : SQLite3.Types.char_2star_t) return SQLite3.Types.int_t
   is
-    array_size        : constant natural := natural (num_columns);
-    ada_column_values : constant column_values_t :=
-      column_values_t (cstringa.convert (pointer => column_values, size => array_size));
-    ada_column_names  : constant column_names_t :=
-      column_names_t (cstringa.convert (pointer => column_names, size => array_size));
+    array_size        : constant Natural := Natural (num_columns);
+    Ada_Column_Values : constant Column_Values_t := SQLite3.API.Convert (Column_Values, array_size);
+    Ada_Column_Names  : constant Column_Names_t := SQLite3.API.Convert (Column_Names, array_size);
   begin
-    -- call Ada callback with new arrays
-    context.callback
-      (column_names  => ada_column_names,
-       column_values => ada_column_values,
-       user_data     => context.user_data);
+    -- call Ada Callback with new arrays
+    context.all.Callback
+      (Column_Names  => Ada_Column_Names,
+       Column_Values => Ada_Column_Values,
+       User_Data     => context.all.User_Data);
     return 0;
-  end exec_cbridge;
+  end Exec_CBridge;
 
-  type cbridge_callback_t is access function
-    (context       : access cbridge_context_t;
-     num_columns   : sqlite3.types.int_t;
-     column_values : sqlite3.types.char_2star_t;
-     column_names  : sqlite3.types.char_2star_t) return sqlite3.types.int_t;
-  pragma convention (c, cbridge_callback_t);
+  type CBridge_Callback_t is access function
+    (context       : access CBridge_Context_t;
+     num_columns   : SQLite3.Types.int_t;
+     Column_Values : SQLite3.Types.char_2star_t;
+     Column_Names  : SQLite3.Types.char_2star_t) return SQLite3.Types.int_t;
+  pragma Convention (C, CBridge_Callback_t);
 
-  -- not using the version from the thin binding due to needing
-  -- specific user_data and callback types
+  -- not using the version from the Thin binding due to needing
+  -- specific User_Data and Callback Types
 
-  function sqlite3_exec
-    (database      : sqlite3.types.database_t;
-     sql           : cs.chars_ptr;
-     callback      : cbridge_callback_t;
-     context       : access cbridge_context_t;
-     error_message : sqlite3.types.char_2star_t) return sqlite3.types.int_t;
-  pragma import (c, sqlite3_exec, "sqlite3_exec");
+  function SQLite3_exec
+    (Database      : SQLite3.Types.Database_t;
+     SQL           : CS.chars_ptr;
+     Callback      : CBridge_Callback_t;
+     context       : access CBridge_Context_t;
+     Error_Message : SQLite3.Types.char_2star_t) return SQLite3.Types.int_t;
+  pragma Import (C, SQLite3_exec, "sqlite3_exec");
 
-  procedure sqlite3_free (data : cs.chars_ptr);
-  pragma import (c, sqlite3_free, "sqlite3_free");
+  procedure SQLite3_free (data : CS.chars_ptr);
+  pragma Import (C, SQLite3_free, "sqlite3_free");
 
   --
   -- exec SQL
-  -- 
+  --
 
-  procedure exec
-    (database      : sqlite3.types.database_t;
-     sql           : string;
-     error         : out boolean;
-     error_message : out us.unbounded_string;
-     callback      : exec_callback_t           := null;
-     user_data     : user_data_access_type     := null)
+  procedure Exec
+   (Database      : SQLite3.Types.Database_t;
+    SQL           : String;
+    Error         : out Boolean;
+    Error_Message : out US.Unbounded_String;
+    Callback      : Exec_Callback_t       := null;
+    User_Data     : User_Data_Access_Type := null)
   is
-    -- data to pass to C callback
-    c_context : aliased cbridge_context_t :=
-      (user_data => user_data,
-       callback  => callback);
+    -- data to pass to C Callback
+    C_Context : aliased CBridge_Context_t := (User_Data, Callback);
 
-    -- C string types
-    sql_ca    : aliased c.char_array := c.to_c (sql);
-    emessage  : aliased cs.chars_ptr;
-    error_val : sqlite3.types.int_t;
+    -- C String Types
+    SQL_C_Array : aliased C.char_array := C.To_C (SQL);
+    Message     : aliased CS.chars_ptr;
+    Error_Value : SQLite3.Types.int_t;
 
   begin
-    if callback /= null then
-      -- call sqlite3_exec with type conversion callback
-      error_val := sqlite3_exec
-        (database      => database,
-         sql           => cs.to_chars_ptr (sql_ca'unchecked_access),
-         callback      => exec_cbridge'access,
-         context       => c_context'unchecked_access,
-         error_message => emessage'address);
+    if Callback /= null then
+      -- call SQLite3_exec with type conversion Callback
+      Error_Value := SQLite3_exec
+        (Database      => Database,
+         SQL           => CS.To_Chars_Ptr (SQL_C_Array'Unchecked_Access),
+         Callback      => Exec_CBridge'Access,
+         Context       => C_Context'Unchecked_Access,
+         Error_Message => Message'Address);
     else
       -- don't bother to go to the trouble of type conversion
-      error_val := sqlite3.thin.exec
-        (db            => database,
-         sql           => cs.to_chars_ptr (sql_ca'unchecked_access),
-         callback      => null,
-         context       => sqlite3.types.null_ptr,
-         error_message => emessage'address);
+      Error_Value := SQLite3.Thin.exec
+        (DB            => Database,
+         SQL           => CS.To_Chars_Ptr (SQL_C_Array'Unchecked_Access),
+         Callback      => null,
+         Context       => SQLite3.Types.Null_Ptr,
+         Error_Message => Message'Address);
     end if;
 
-    -- convert error message
-    if error_val /= sqlite3.constants.sqlite_ok then
-      error := true;
-      us.set_unbounded_string (error_message, cs.value (emessage));
-      sqlite3_free (emessage);
+    -- convert Error message
+    if Error_Value /= SQLite3.Constants.SQLITE_OK then
+      Error := True;
+      US.Set_Unbounded_String (Error_Message, CS.Value (Message));
+      SQLite3_free (Message);
     else
-      error := false;
+      Error := False;
     end if;
-  end exec;
+  end Exec;
 
-  procedure close
-    (database : sqlite3.types.database_t)
+  procedure Close
+    (Database : SQLite3.Types.Database_t)
   is
-    ec : constant sqlite3.types.int_t := sqlite3.thin.close
-      (sql => database);
+    Error_Code : constant SQLite3.Types.int_t := SQLite3.Thin.close (Database);
   begin
-    if ec /= sqlite3.constants.sqlite_ok then
-      raise database_error with error_message (database);
+    if Error_Code /= SQLite3.Constants.SQLITE_OK then
+      raise Database_Error with Error_Message (Database);
     end if;
-  end close;
+  end Close;
 
-  function sqlite3_open_v2
-    (file : cs.chars_ptr;
-     db   : access sqlite3.types.database_t;
-     mode : mode_t;
-     vfs  : cs.chars_ptr := cs.null_ptr) return sqlite3.types.int_t;
-  pragma import (c, sqlite3_open_v2, "sqlite3_open_v2");
+  function SQLite3_open_v2
+    (file : CS.chars_ptr;
+     db   : access SQLite3.Types.Database_t;
+     mode : Mode_t;
+     vfs  : CS.chars_ptr := CS.Null_Ptr) return SQLite3.Types.int_t;
+  pragma Import (C, SQLite3_open_v2, "sqlite3_open_v2");
 
-  procedure open
-    (filename : string;
-     mode     : mode_t := OPEN_READWRITE or OPEN_CREATE;
-     database : out sqlite3.types.database_t)
+  procedure Open
+    (File_Name : String;
+     Mode      : Mode_t := OPEN_READWRITE or OPEN_CREATE;
+     Database  : out SQLite3.Types.Database_t)
   is
-    fn : aliased c.char_array := c.to_c (filename);
-    db : aliased sqlite3.types.database_t;
-    ec : constant sqlite3.types.int_t := sqlite3_open_v2
-      (file => cs.to_chars_ptr (fn'unchecked_access),
-       mode => mode,
-       db   => db'unchecked_access);
+    Func       : aliased C.char_array := C.To_C (File_Name);
+    DB         : aliased SQLite3.Types.Database_t;
+    Error_Code : constant SQLite3.Types.int_t := SQLite3_open_v2
+      (File => CS.To_Chars_Ptr (Func'Unchecked_Access),
+       Mode => Mode,
+       DB   => DB'Unchecked_Access);
   begin
-    database := db;
-    if ec /= sqlite3.constants.sqlite_ok then
-      raise database_error with error_message (database);
+    Database := DB;
+    if Error_Code /= SQLite3.Constants.SQLITE_OK then
+      raise Database_Error with Error_Message (Database);
     end if;
-  end open;
+  end Open;
 
-  function error_message
-    (database : sqlite3.types.database_t) return string is
+  function Error_Message
+    (Database : SQLite3.Types.Database_t) return String is
   begin
-    return cs.value (sqlite3.thin.errmsg (database));
-  end error_message;
+    return CS.Value (SQLite3.Thin.errmsg (Database));
+  end Error_Message;
 
-end sqlite3.api;
+end SQLite3.API;

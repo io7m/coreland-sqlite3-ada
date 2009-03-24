@@ -1,23 +1,25 @@
-with ada.strings.unbounded;
-with ada.text_io;
-with sqlite3;
+with Ada.Strings.Unbounded;
+with Ada.Text_IO;
+with SQLite3;
 
 package body rowdump is
-  package io renames ada.text_io;
-  package us renames ada.strings.unbounded;
+  package IO renames Ada.Text_IO;
+  package US renames Ada.Strings.Unbounded;
 
-  procedure row_callback
-    (column_names  : sqlite3_api.column_names_t;
-     column_values : sqlite3_api.column_values_t;
-     user_data     : int_access_t) is
+  procedure Row_Callback
+    (Column_Names  : SQLite3_API.Column_Names_t;
+     Column_Values : SQLite3_API.Column_Values_t;
+     User_Data     : Int_Access_t)
+  is
+    pragma Assert (User_Data /= null);
   begin
-    io.put_line ("-- row start");
-    for index in column_names'range loop
-      io.put_line
-        (us.to_string (column_names (index)) & "|" &
-         us.to_string (column_values (index)));
+    IO.Put_Line ("-- row start");
+    for Index in Column_Names'Range loop
+      IO.Put_Line
+        (US.To_String (Column_Names (Index)) & "|" &
+         US.To_String (Column_Values (Index)));
     end loop;
-    io.put_line ("-- row end");
-  end row_callback;
+    IO.Put_Line ("-- row end");
+  end Row_Callback;
 
 end rowdump;

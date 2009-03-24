@@ -1,20 +1,21 @@
 package body getline is
 
   procedure get
-    (file :  in ada.text_io.file_type;
-     item : out ada.strings.unbounded.unbounded_string)
+    (File : in Ada.Text_IO.File_Type;
+     Item : out Ada.Strings.Unbounded.Unbounded_String)
   is
-    line : string (1 .. 128);
-    last : natural;
+    Line : String (1 .. 128);
+    Last : Natural;
   begin
     loop
-      ada.text_io.get_line
-        (item => line,
-         last => last);
-      ada.strings.unbounded.append
-        (source   => item,
-         new_item => line (1 .. last));
-      exit when last < line'last;
+      Ada.Text_IO.Get_Line
+        (File => File,
+         Item => Line,
+         Last => Last);
+      Ada.Strings.Unbounded.Append
+        (Source   => Item,
+         New_Item => Line (1 .. Last));
+      exit when Last < Line'Last;
     end loop;
   end get;
 
