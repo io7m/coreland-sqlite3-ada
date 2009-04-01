@@ -13,17 +13,17 @@ package body SQLite3.API is
   type CBridge_Context_t is record
     User_Data : User_Data_Access_Type;
     Callback  : access procedure
-      (Column_Names  : Column_Names_t;
-       Column_Values : Column_Values_t;
-       User_Data     : User_Data_Access_Type);
+      (Column_Names  : in Column_Names_t;
+       Column_Values : in Column_Values_t;
+       User_Data     : in User_Data_Access_Type);
   end record;
   pragma Convention (C, CBridge_Context_t);
 
   function Exec_CBridge
     (context       : access CBridge_Context_t;
-     num_columns   : SQLite3.Types.int_t;
-     Column_Values : SQLite3.Types.char_2star_t;
-     Column_Names  : SQLite3.Types.char_2star_t) return SQLite3.Types.int_t;
+     num_columns   : in SQLite3.Types.int_t;
+     Column_Values : in SQLite3.Types.char_2star_t;
+     Column_Names  : in SQLite3.Types.char_2star_t) return SQLite3.Types.int_t;
   pragma Convention (C, Exec_CBridge);
 
   --
@@ -32,9 +32,9 @@ package body SQLite3.API is
 
   function Exec_CBridge
     (context       : access CBridge_Context_t;
-     num_columns   : SQLite3.Types.int_t;
-     Column_Values : SQLite3.Types.char_2star_t;
-     Column_Names  : SQLite3.Types.char_2star_t) return SQLite3.Types.int_t
+     num_columns   : in SQLite3.Types.int_t;
+     Column_Values : in SQLite3.Types.char_2star_t;
+     Column_Names  : in SQLite3.Types.char_2star_t) return SQLite3.Types.int_t
   is
     array_size        : constant Natural := Natural (num_columns);
     Ada_Column_Values : constant Column_Values_t := SQLite3.API.Convert (Column_Values, array_size);
@@ -50,20 +50,20 @@ package body SQLite3.API is
 
   type CBridge_Callback_t is access function
     (context       : access CBridge_Context_t;
-     num_columns   : SQLite3.Types.int_t;
-     Column_Values : SQLite3.Types.char_2star_t;
-     Column_Names  : SQLite3.Types.char_2star_t) return SQLite3.Types.int_t;
+     num_columns   : in SQLite3.Types.int_t;
+     Column_Values : in SQLite3.Types.char_2star_t;
+     Column_Names  : in SQLite3.Types.char_2star_t) return SQLite3.Types.int_t;
   pragma Convention (C, CBridge_Callback_t);
 
   -- not using the version from the Thin binding due to needing
   -- specific User_Data and Callback Types
 
   function SQLite3_exec
-    (Database      : SQLite3.Types.Database_t;
-     SQL           : CS.chars_ptr;
-     Callback      : CBridge_Callback_t;
+    (Database      : in Database_t;
+     SQL           : in CS.chars_ptr;
+     Callback      : in CBridge_Callback_t;
      context       : access CBridge_Context_t;
-     Error_Message : SQLite3.Types.char_2star_t) return SQLite3.Types.int_t;
+     Error_Message : in SQLite3.Types.char_2star_t) return SQLite3.Types.int_t;
   pragma Import (C, SQLite3_exec, "sqlite3_exec");
 
   procedure SQLite3_free (data : CS.chars_ptr);
@@ -74,12 +74,12 @@ package body SQLite3.API is
   --
 
   procedure Exec
-   (Database      : SQLite3.Types.Database_t;
-    SQL           : String;
+   (Database      : in Database_t;
+    SQL           : in String;
     Error         : out Boolean;
     Error_Message : out US.Unbounded_String;
-    Callback      : Exec_Callback_t       := null;
-    User_Data     : User_Data_Access_Type := null)
+    Callback      : in Exec_Callback_t       := null;
+    User_Data     : in User_Data_Access_Type := null)
   is
     -- data to pass to C Callback
     C_Context : aliased CBridge_Context_t := (User_Data, Callback);
@@ -119,7 +119,7 @@ package body SQLite3.API is
   end Exec;
 
   procedure Close
-    (Database : SQLite3.Types.Database_t)
+    (Database : in Database_t)
   is
     Error_Code : constant SQLite3.Types.int_t := SQLite3.Thin.close (Database);
   begin
@@ -129,15 +129,15 @@ package body SQLite3.API is
   end Close;
 
   function SQLite3_open_v2
-    (file : CS.chars_ptr;
+    (file : in CS.chars_ptr;
      db   : access SQLite3.Types.Database_t;
-     mode : Mode_t;
-     vfs  : CS.chars_ptr := CS.Null_Ptr) return SQLite3.Types.int_t;
+     mode : in Mode_t;
+     vfs  : in CS.chars_ptr := CS.Null_Ptr) return SQLite3.Types.int_t;
   pragma Import (C, SQLite3_open_v2, "sqlite3_open_v2");
 
   procedure Open
-    (File_Name : String;
-     Mode      : Mode_t := OPEN_READWRITE or OPEN_CREATE;
+    (File_Name : in String;
+     Mode      : in Mode_t := OPEN_READ_WRITE or OPEN_CREATE;
      Database  : out SQLite3.Types.Database_t)
   is
     Func       : aliased C.char_array := C.To_C (File_Name);
@@ -154,12 +154,12 @@ package body SQLite3.API is
   end Open;
 
   function Error_Message
-    (Database : SQLite3.Types.Database_t) return String is
+    (Database : in Database_t) return String is
   begin
     return CS.Value (SQLite3.Thin.errmsg (Database));
   end Error_Message;
 
-  function Error_Code (Database : SQLite3.Types.Database_t) return Error_t is
+  function Error_Code (Database : in Database_t) return Error_t is
   begin
     return Error_t'Val (SQLite3.Thin.errcode (Database));
   end Error_Code;

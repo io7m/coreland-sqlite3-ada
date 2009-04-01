@@ -9,6 +9,9 @@ generic
 package SQLite3.API is
   package US renames Ada.Strings.Unbounded;
 
+  -- Main database type.
+  subtype Database_t is SQLite3.Types.Database_t;
+
   -- generic exception type
   Database_Error : exception;
 
@@ -79,51 +82,51 @@ package SQLite3.API is
   pragma Convention (C, Error_t);
 
   type Mode_t is mod 2 ** 32;
-  OPEN_READONLY       : constant Mode_t := 16#00000001#;
-  OPEN_READWRITE      : constant Mode_t := 16#00000002#;
-  OPEN_CREATE         : constant Mode_t := 16#00000004#;
-  OPEN_DELETEONCLOSE  : constant Mode_t := 16#00000008#;
-  OPEN_EXCLUSIVE      : constant Mode_t := 16#00000010#;
-  OPEN_MAIN_DB        : constant Mode_t := 16#00000100#;
-  OPEN_TEMP_DB        : constant Mode_t := 16#00000200#;
-  OPEN_TRANSIENT_DB   : constant Mode_t := 16#00000400#;
-  OPEN_MAIN_JOURNAL   : constant Mode_t := 16#00000800#;
-  OPEN_TEMP_JOURNAL   : constant Mode_t := 16#00001000#;
-  OPEN_SUBJOURNAL     : constant Mode_t := 16#00002000#;
-  OPEN_MASTER_JOURNAL : constant Mode_t := 16#00004000#;
-  OPEN_NOMUTEX        : constant Mode_t := 16#00008000#;
-  OPEN_FULLMUTEX      : constant Mode_t := 16#00010000#;
+  OPEN_READONLY        : constant Mode_t := 16#00000001#;
+  OPEN_READ_WRITE      : constant Mode_t := 16#00000002#;
+  OPEN_CREATE          : constant Mode_t := 16#00000004#;
+  OPEN_DELETE_ON_CLOSE : constant Mode_t := 16#00000008#;
+  OPEN_EXCLUSIVE       : constant Mode_t := 16#00000010#;
+  OPEN_MAIN_DB         : constant Mode_t := 16#00000100#;
+  OPEN_TEMP_DB         : constant Mode_t := 16#00000200#;
+  OPEN_TRANSIENT_DB    : constant Mode_t := 16#00000400#;
+  OPEN_MAIN_JOURNAL    : constant Mode_t := 16#00000800#;
+  OPEN_TEMP_JOURNAL    : constant Mode_t := 16#00001000#;
+  OPEN_SUBJOURNAL      : constant Mode_t := 16#00002000#;
+  OPEN_MASTER_JOURNAL  : constant Mode_t := 16#00004000#;
+  OPEN_NOMUTEX         : constant Mode_t := 16#00008000#;
+  OPEN_FULLMUTEX       : constant Mode_t := 16#00010000#;
 
   type Column_Names_t is new C_String.Arrays.String_Array_t;
   type Column_Values_t is new C_String.Arrays.String_Array_t;
 
   procedure Open
-   (File_Name : String;
-    Mode      : Mode_t := OPEN_READWRITE or OPEN_CREATE;
-    Database  : out SQLite3.Types.Database_t);
+   (File_Name : in String;
+    Mode      : in Mode_t := OPEN_READ_WRITE or OPEN_CREATE;
+    Database  : out Database_t);
   pragma Inline (Open);
 
   type Exec_Callback_t is access procedure
-    (Column_Names  : Column_Names_t;
-     Column_Values : Column_Values_t;
-     User_Data     : User_Data_Access_Type);
+    (Column_Names  : in Column_Names_t;
+     Column_Values : in Column_Values_t;
+     User_Data     : in User_Data_Access_Type);
 
   procedure Exec
-   (Database      : SQLite3.Types.Database_t;
-    SQL           : String;
+   (Database      : in Database_t;
+    SQL           : in String;
     Error         : out Boolean;
     Error_Message : out US.Unbounded_String;
-    Callback      : Exec_Callback_t       := null;
-    User_Data     : User_Data_Access_Type := null);
+    Callback      : in Exec_Callback_t       := null;
+    User_Data     : in User_Data_Access_Type := null);
   pragma Inline (Exec);
 
-  procedure Close (Database : SQLite3.Types.Database_t);
+  procedure Close (Database : in Database_t);
   pragma Inline (Close);
 
-  function Error_Message (Database : SQLite3.Types.Database_t) return String;
+  function Error_Message (Database : in Database_t) return String;
   pragma Inline (Error_Message);
 
-  function Error_Code (Database : SQLite3.Types.Database_t) return Error_t;
+  function Error_Code (Database : in Database_t) return Error_t;
   pragma Inline (Error_Code);
 
 end SQLite3.API;
